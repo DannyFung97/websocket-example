@@ -50,7 +50,7 @@ export default function Home() {
     closeConnection();
     const socket = new WebSocket(
       process.env.NODE_ENV === "production"
-        ? "ws://websocket-example-production.up.railway.app"
+        ? "wss://websocket-example-production.up.railway.app"
         : "ws://localhost:4000"
     ) as WebSocketExt;
     socket.onopen = () => {
