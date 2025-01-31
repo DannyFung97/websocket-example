@@ -48,7 +48,11 @@ export default function Home() {
 
   const openWebSocket = () => {
     closeConnection();
-    const socket = new WebSocket("ws://localhost:4000") as WebSocketExt;
+    const socket = new WebSocket(
+      process.env.NODE_ENV === "production"
+        ? "ws://websocket-example-production.up.railway.app"
+        : "ws://localhost:4000"
+    ) as WebSocketExt;
     socket.onopen = () => {
       addMessage("WebSocket connection opened");
     };
