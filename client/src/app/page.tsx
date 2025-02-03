@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 const TIME_BUFFER = 1000 * 1;
 const HEARTBEAT_TIMEOUT = 1000 * 5 + TIME_BUFFER;
 const HEARTBEAT_VALUE = 1;
