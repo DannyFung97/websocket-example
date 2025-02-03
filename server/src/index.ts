@@ -1,15 +1,27 @@
 import express from "express";
 import configureSockets from "./sockets";
+import http from "http";
+import dotenv from "dotenv";
+import configureRoutes from "./routers";
+import cors from "cors";
 
-// ws is used due to its advantages over socket.io, including size, performance, and scalability
-// In production, keep your websocket server separate from a complete API implementation
-import { WebSocketServer, WebSocket } from "ws";
+dotenv.config();
 
 const app = express();
 const port = 4000;
 
-configureSockets(
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  })
-);
+// Enable CORS for all routes
+app.use(cors());
+
+// Create an HTTP server
+const server = http.createServer(app);
+
+configureRoutes(app);
+
+// Configure WebSocket server
+configureSockets(server);
+
+// Start the server
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

@@ -1,10 +1,13 @@
 import { Server } from "http";
+
+// ws is used due to its advantages over socket.io, including size, performance, and scalability
+// In production, keep your websocket server separate from a complete API implementation
 import { WebSocketServer, WebSocket } from "ws";
 
 const HEARTBEAT_INTERVAL = 1000 * 5; // 5 seconds
 const HEARTBEAT_VALUE = 1;
 
-function onSockerPreError(error: Error) {
+function onSocketPreError(error: Error) {
   console.error(`WebSocket server error: ${error}`);
 }
 
@@ -26,8 +29,8 @@ export default function configure(s: Server) {
   // upgrade event is emitted by the HTTP server when a client requests an upgrade to the WebSocket protocol
   s.on("upgrade", (request, socket, head) => {
     // http server handling
-    socket.on("error", onSockerPreError);
-    // perform any type of auth, on desktop, use cookies, on mobile, use JWT from req
+    socket.on("error", onSocketPreError);
+    // perform any type of auth, on desktop, use cookies, on mobile, use JWT from req in this part
 
     if (!!request.headers["BadAuth"]) {
       socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
@@ -36,7 +39,7 @@ export default function configure(s: Server) {
     }
 
     wss.handleUpgrade(request, socket, head, (ws) => {
-      socket.removeListener("error", onSockerPreError);
+      socket.removeListener("error", onSocketPreError);
       wss.emit("connection", ws, request);
     });
   });
