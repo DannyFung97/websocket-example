@@ -19,8 +19,42 @@ function ping(ws: WebSocket) {
   ws.send(HEARTBEAT_VALUE, { binary: true });
 }
 
+const upstreamSocket = new WebSocket("wss://external-data-provider.com");
+
+// Store client subscriptions (maps WebSocket clients to their subscribed stock symbols and notifications)
+const subscriptions = new Map();
+
+// example upstream websocket below
+
+// upstreamSocket.on("open", () => console.log("Connected to upstream WebSocket"));
+// upstreamSocket.on("close", () => console.log("Upstream WebSocket closed"));
+// upstreamSocket.on("error", (err) => console.error("Upstream WebSocket error:", err));
+
+// upstreamSocket.on("message", (data) => {
+//     try {
+//         const parsedData = JSON.parse(data);
+
+//         // Broadcast only to clients who subscribed to this type of data
+//         wss.clients.forEach((client) => {
+//             if (client.readyState === WebSocket.OPEN) {
+//                 const sub = subscriptions.get(client) || { stocks: new Set(), notifications: new Set() };
+
+//                 if (
+//                     (parsedData.type === "priceUpdate" && sub.stocks.has(parsedData.stock)) ||
+//                     (parsedData.type === "notification" && sub.notifications.has(parsedData.category))
+//                 ) {
+//                     client.send(JSON.stringify(parsedData));
+//                 }
+//             }
+//         });
+//     } catch (error) {
+//         console.error("Error parsing upstream message:", error);
+//     }
+// });
+
 export default function configure(s: Server) {
   // Decouples the server from the HTTP server, typically in production, allows for manual control of the WebSocket server
+  // when you do noServer: true, consider adding the websocket upgrade event to manually control the handshake process
   const wss = new WebSocketServer({ noServer: true });
 
   // generally, when you deploy a server instance, you'll likely scale to multiple instances, this is a problem because websockets work on a single instance

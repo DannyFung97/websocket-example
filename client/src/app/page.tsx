@@ -72,6 +72,7 @@ export default function Home() {
       process.env.NODE_ENV === "production"
         ? "wss://websocket-example-production.up.railway.app"
         : "ws://localhost:4000"
+      // : "wss://indexer.dydx.trade/v4/ws"
     ) as WebSocketExt;
     socket.onopen = () => {
       addMessage("WebSocket connection opened");
@@ -86,6 +87,7 @@ export default function Home() {
       addMessage(`WebSocket error: ${error}`);
     };
     socket.onmessage = (event) => {
+      console.log(event);
       if (isBinary(event.data)) {
         heartbeat();
       } else {
@@ -94,6 +96,18 @@ export default function Home() {
     };
     wsRef.current = socket;
   };
+
+  // const sub = () => {
+  //   if (!wsRef.current) return;
+  //   wsRef.current?.send(
+  //     JSON.stringify({
+  //       batched: true,
+  //       channel: "v4_markets",
+  //       id: undefined,
+  //       type: "subscribe",
+  //     } as any)
+  //   );
+  // };
 
   const closeWebSocket = () => {
     if (wsRef.current) {
@@ -140,6 +154,7 @@ export default function Home() {
         placeholder="Type your message"
       />
       <button onClick={sendMessage}>Send Message</button>
+      {/* <button onClick={sub}>Sub</button> */}
       <ul>
         {messages.map((msg, index) => (
           <li key={index}>{msg}</li>
