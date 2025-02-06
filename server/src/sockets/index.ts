@@ -19,10 +19,10 @@ function ping(ws: WebSocket) {
   ws.send(HEARTBEAT_VALUE, { binary: true });
 }
 
-const upstreamSocket = new WebSocket("wss://external-data-provider.com");
+// const upstreamSocket = new WebSocket("wss://external-data-provider.com");
 
 // Store client subscriptions (maps WebSocket clients to their subscribed stock symbols and notifications)
-const subscriptions = new Map();
+// const subscriptions = new Map();
 
 // example upstream websocket below
 
